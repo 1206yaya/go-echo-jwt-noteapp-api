@@ -1,11 +1,15 @@
 
+.PHONY: migrate
 
 
 run:
 	go run main.go
 
-rundb:
+run-db:
 	docker compose up -d
 
-stopdb:
+stop-db:
 	docker compose down
+
+migrate:
+	GO_ENV=dev go run migrate/migrate.go
