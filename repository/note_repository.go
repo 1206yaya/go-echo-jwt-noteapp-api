@@ -46,7 +46,13 @@ func (tr *noteRepository) CreateNote(note *model.Note) error {
 }
 
 func (tr *noteRepository) UpdateNote(note *model.Note, userId uint, noteId uint) error {
-	result := tr.db.Model(note).Clauses(clause.Returning{}).Where("id=? AND user_id=?", noteId, userId).Update("title", note.Title)
+	// result := tr.db.Model(note).Clauses(clause.Returning{}).Where("id=? AND user_id=?", noteId, userId).Update("title", note.Title)
+	result := tr.db.Model(&model.Note{}).Clauses(clause.Returning{}).Where("id=? AND user_id=?", noteId, userId).
+		Updates(map[string]interface{}{
+			"title": note.Title,
+			"body":  note.Body,
+		})
+		
 	if result.Error != nil {
 		return result.Error
 	}

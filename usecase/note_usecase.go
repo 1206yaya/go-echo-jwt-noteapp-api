@@ -31,6 +31,7 @@ func (usecase *noteUsecase) GetAllNotes(userId uint) ([]model.NoteResponse, erro
 		t := model.NoteResponse{
 			ID:        v.ID,
 			Title:     v.Title,
+			Body:      v.Body,
 			CreatedAt: v.CreatedAt,
 			UpdatedAt: v.UpdatedAt,
 		}
@@ -74,6 +75,7 @@ func (usecase *noteUsecase) UpdateNote(note model.Note, userId uint, noteId uint
 	resNote := model.NoteResponse{
 		ID:        note.ID,
 		Title:     note.Title,
+		Body:      note.Body,
 		CreatedAt: note.CreatedAt,
 		UpdatedAt: note.UpdatedAt,
 	}
