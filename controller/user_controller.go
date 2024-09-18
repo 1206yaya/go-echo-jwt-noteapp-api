@@ -27,7 +27,7 @@ func NewUserController(usecase usecase.IUserUsecase) IUserController {
 
 func (controller *userController) SignUp(c echo.Context) error {
 	user := model.User{}
-	// バインドしたデータをuserに格納
+	// リクエストボディのデータをuser構造体にバインド（代入）
 	if err := c.Bind(&user); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}

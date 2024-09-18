@@ -15,6 +15,11 @@ func main() {
 	userRepository := repository.NewUserRepository(db)
 	userUsecase := usecase.NewUserUsecase(userRepository)
 	userController := controller.NewUserController(userUsecase)
-	e := router.NewRouter(userController)
+
+	noteRepository := repository.NewNoteRepository(db)
+	noteUsecase := usecase.NewNoteUsecase(noteRepository)
+	noteController := controller.NewNoteController(noteUsecase)
+
+	e := router.NewRouter(userController, noteController)
 	e.Logger.Fatal(e.Start(":8080"))
 }

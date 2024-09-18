@@ -6,11 +6,12 @@ import (
 
 	"github.com/1206yaya/go-echo-jwt-noteapp-api/controller"
 
+	echojwt "github.com/labstack/echo-jwt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 
-func NewRouter(uc controller.IUserController) *echo.Echo {
+func NewRouter(uc controller.IUserController, tc controller.INoteController) *echo.Echo {
 	e := echo.New()
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		// FE_URL: Frontendの本番環境のドメイン
@@ -30,6 +31,7 @@ func NewRouter(uc controller.IUserController) *echo.Echo {
 		// SameSiteNoneModeを指定すると、自動的に secure が true になるため、
 		// Postmanなどでテストする場合は、SameSiteDefaultModeを指定する
 		CookieSameSite: http.SameSiteNoneMode,
+
 		//CookieMaxAge:   60,
 	}))
 
@@ -37,6 +39,23 @@ func NewRouter(uc controller.IUserController) *echo.Echo {
 	e.POST("/login", uc.LogIn)
 	e.POST("/logout", uc.LogOut)
 	e.GET("/csrf", uc.CsrfToken)
+
+	t := e.Group("/notes")
+
+	// /notes 以下のエンドポイントにアクセスする際にJWTの認証を行う
+	// Use()メソッドでミドルウェアを登録
+	// echojwt.WithConfig()でJWTの設定を行う
+	t.Use(echojwt.WithConfig(echojwt.Config{
+		// JWT の署名に使用される秘密鍵を設定
+		SigningKey: []byte(os.Getenv("SECRET")),
+		// JWT トークンがどこから取得されるかを指定
+		TokenLookup: "cookie:token",
+	}))
+	t.GET("", tc.GetAllNotes)
+	t.GET("/:noteId", tc.GetNoteById)
+	t.POST("", tc.CreateNote)
+	t.PUT("/:noteId", tc.UpdateNote)
+	t.DELETE("/:noteId", tc.DeleteNote)
 
 	return e
 }
