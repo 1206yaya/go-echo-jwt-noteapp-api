@@ -15,7 +15,7 @@
 
 - [x] docker でデータベースを作成
 - [x] gorm を使用してデータベースに接続する
-- [ ] User Sign up 機能
-- [ ] User Looing 機能
-- [ ] Task CRUD 機能
+- [x] User Sign up 機能
+- [x] User Looing / Logout 機能
+- [ ] Note CRUD 機能
 - [ ] ozzo-validation を使用してバリデーションを実装する

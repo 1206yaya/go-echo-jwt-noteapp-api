@@ -1,16 +1,20 @@
 package main
 
 import (
-    "net/http"
-    "github.com/labstack/echo/v4"
+	"github.com/1206yaya/go-echo-jwt-noteapp-api/controller"
+	"github.com/1206yaya/go-echo-jwt-noteapp-api/db"
+	"github.com/1206yaya/go-echo-jwt-noteapp-api/repository"
+	"github.com/1206yaya/go-echo-jwt-noteapp-api/router"
+	"github.com/1206yaya/go-echo-jwt-noteapp-api/usecase"
 )
 
 func main() {
-    e := echo.New()
 
-    e.GET("/", func(c echo.Context) error {
-        return c.String(http.StatusOK, "Hello, World!")
-    })
+	db := db.NewDB()
 
-    e.Start(":8080")
+	userRepository := repository.NewUserRepository(db)
+	userUsecase := usecase.NewUserUsecase(userRepository)
+	userController := controller.NewUserController(userUsecase)
+	e := router.NewRouter(userController)
+	e.Logger.Fatal(e.Start(":8080"))
 }
